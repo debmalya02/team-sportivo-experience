@@ -15,6 +15,7 @@ import Xaplotes from "./pages/Xaplotes";
 import Vibgyor from "./pages/Vibgyor";
 import Gallery from "./pages/Gallery";
 import Events from "./pages/Events";
+import EventDetails from "./pages/EventDetails";
 import Sponsors from "./pages/Sponsors";
 import Contact from "./pages/Contact";
 import SignIn from "./pages/SignIn";
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/vibgyor" element={<Vibgyor />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/events/:eventId" element={<EventDetails />} />
             <Route path="/sponsors" element={<Sponsors />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/signin" element={<SignIn />} />
