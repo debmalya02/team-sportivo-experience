@@ -1,10 +1,17 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Calendar, Clock, MapPin } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import CustomButton from '@/components/ui/CustomButton';
 import SocialShare from '@/components/ui/SocialShare';
 
 const Events = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  
+  // Get category from URL parameters
+  const categoryParam = searchParams.get('category');
+  
   const events = [
     {
       id: 'event1',
@@ -14,7 +21,7 @@ const Events = () => {
       location: 'Main Stadium, Sports City',
       description: 'The culmination of this year\'s tournament with the top teams competing for the championship title.',
       image: 'https://images.unsplash.com/photo-1471295253337-3ceaaedca402?auto=format&fit=crop&w=800&q=80',
-      teams: ['Xaplotes', 'External Team'],
+      teams: ['Team A', 'Team B'],
       featured: true,
       category: 'Competition'
     },
@@ -38,7 +45,7 @@ const Events = () => {
       location: 'Community Arena',
       description: 'A special tournament to raise funds for local children\'s sports programs.',
       image: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=800&q=80',
-      teams: ['Vibgyor', 'Partner Teams'],
+      teams: ['Partner Teams'],
       featured: false,
       category: 'Community'
     },
@@ -62,14 +69,58 @@ const Events = () => {
       location: 'Indoor Arena',
       description: 'Intensive training sessions focusing on technique refinement during the off-season.',
       image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=800&q=80',
-      teams: ['Xaplotes', 'Vibgyor'],
+      teams: ['All Divisions'],
       featured: false,
       category: 'Training'
-    }
+    },
+    {
+      id: 'xaplotes',
+      title: 'Xaplotes',
+      date: 'October 15-20, 2023',
+      time: 'All Day',
+      location: 'College Main Stadium',
+      description: 'Our premier sports event featuring high-intensity tactical competitions, showcasing precision and teamwork.',
+      image: 'https://images.unsplash.com/photo-1526232686172-8ac86591661f?auto=format&fit=crop&w=800&q=80',
+      teams: ['College Teams'],
+      featured: true,
+      category: 'Intra College'
+    },
+    {
+      id: 'vibgyor',
+      title: 'Vibgyor',
+      date: 'November 5-10, 2023',
+      time: 'All Day',
+      location: 'College Cultural Center',
+      description: 'A dynamic cultural and sports festival bringing together creative strategies and innovative techniques in competitive events.',
+      image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+      teams: ['Cultural Groups'],
+      featured: true,
+      category: 'Intra College'
+    },
   ];
   
   const categories = ['All', ...new Set(events.map(event => event.category))];
-  const [activeCategory, setActiveCategory] = React.useState('All');
+  const [activeCategory, setActiveCategory] = React.useState(categoryParam || 'All');
+  
+  // Update active category when URL parameter changes
+  useEffect(() => {
+    if (categoryParam && categories.includes(categoryParam)) {
+      setActiveCategory(categoryParam);
+    } else if (categoryParam) {
+      setActiveCategory('All');
+    }
+  }, [categoryParam, categories]);
+  
+  // Update URL when category changes
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+    if (category === 'All') {
+      searchParams.delete('category');
+    } else {
+      searchParams.set('category', category);
+    }
+    setSearchParams(searchParams);
+  };
   
   const filteredEvents = activeCategory === 'All' 
     ? events 
@@ -88,7 +139,7 @@ const Events = () => {
             {categories.map((category, index) => (
               <button 
                 key={index}
-                onClick={() => setActiveCategory(category)}
+                onClick={() => handleCategoryChange(category)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   activeCategory === category 
                     ? 'bg-primary text-white' 
