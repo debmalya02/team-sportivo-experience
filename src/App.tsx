@@ -20,6 +20,11 @@ import Sponsors from "./pages/Sponsors";
 import Contact from "./pages/Contact";
 import SignIn from "./pages/SignIn";
 import NotFound from "./pages/NotFound";
+// New team pages
+import CC from "./pages/teams/CC";
+import WC from "./pages/teams/WC";
+import Mentors from "./pages/teams/Mentors";
+import Volunteers from "./pages/teams/Volunteers";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +47,10 @@ const App = () => (
             <Route path="/sponsors" element={<Sponsors />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/signin" element={<SignIn />} />
+            <Route path="/teams/cc" element={<CC />} />
+            <Route path="/teams/wc" element={<WC />} />
+            <Route path="/teams/mentors" element={<Mentors />} />
+            <Route path="/teams/volunteers" element={<Volunteers />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

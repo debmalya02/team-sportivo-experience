@@ -10,17 +10,17 @@ const Xaplotes = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-600/10 mb-2">
-                <span className="text-xs font-medium text-blue-600">TEAM PROFILE</span>
+                <span className="text-xs font-medium text-blue-600">EVENT</span>
               </div>
               <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-                Xaplotes Team
+                Xaplotes
               </h1>
               <p className="text-lg text-gray-600">
-                Our premier team specializing in high-intensity tactical sports, known for their precision and teamwork.
+                Our premier sports event featuring high-intensity tactical competitions, showcasing precision and teamwork.
               </p>
               <div className="pt-4">
-                <CustomButton to="/contact">
-                  Join Xaplotes
+                <CustomButton to="/events/xaplotes">
+                  View Event Details
                 </CustomButton>
               </div>
             </div>
@@ -30,7 +30,7 @@ const Xaplotes = () => {
               <div className="relative overflow-hidden rounded-xl shadow-xl">
                 <img 
                   src="https://images.unsplash.com/photo-1526232686172-8ac86591661f?auto=format&fit=crop&w=800&q=80" 
-                  alt="Xaplotes team in action"
+                  alt="Xaplotes event showcase"
                   className="w-full hover-scale"
                 />
               </div>
@@ -40,12 +40,22 @@ const Xaplotes = () => {
       </section>
       
       <section className="py-16 bg-white">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-12">Team Coming Soon</h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            We're currently updating this page with comprehensive information about our Xaplotes team.
-            Please check back soon for team members, achievements, and upcoming events.
-          </p>
+        <div className="container mx-auto px-6">
+          <h2 className="text-3xl font-bold mb-12 text-center">Event Highlights</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-gray-50 p-6 rounded-xl hover-scale">
+              <h3 className="text-xl font-bold mb-3">Competitive Tournaments</h3>
+              <p className="text-gray-600">Multi-level tournaments featuring teams from various colleges and universities.</p>
+            </div>
+            <div className="bg-gray-50 p-6 rounded-xl hover-scale">
+              <h3 className="text-xl font-bold mb-3">Interactive Sessions</h3>
+              <p className="text-gray-600">Workshops and interactive sessions with sports professionals and industry experts.</p>
+            </div>
+            <div className="bg-gray-50 p-6 rounded-xl hover-scale">
+              <h3 className="text-xl font-bold mb-3">Networking Opportunities</h3>
+              <p className="text-gray-600">Connect with sports enthusiasts, professionals, and scouts from across the region.</p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
