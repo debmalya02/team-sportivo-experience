@@ -1,54 +1,55 @@
 
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   
   const images = [
     {
-      src: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=800&q=80',
-      alt: 'Athletes celebrating a victory',
-      category: 'Competitions'
+      src: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=800&q=80',
+      alt: 'Chess tournament',
+      category: 'Chess'
     },
     {
-      src: 'https://images.unsplash.com/photo-1474224017046-182ece80b263?auto=format&fit=crop&w=800&q=80',
-      alt: 'Team training session',
-      category: 'Training'
+      src: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4e8?auto=format&fit=crop&w=800&q=80',
+      alt: 'Badminton match',
+      category: 'Badminton'
     },
     {
-      src: 'https://images.unsplash.com/photo-1526676037777-05a232554d77?auto=format&fit=crop&w=800&q=80',
-      alt: 'Team photo',
-      category: 'Team'
+      src: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=800&q=80',
+      alt: 'Cricket tournament',
+      category: 'Cricket'
     },
     {
-      src: 'https://images.unsplash.com/photo-1485395037613-e83d5c1f5290?auto=format&fit=crop&w=800&q=80',
-      alt: 'Athletes in action',
-      category: 'Competitions'
+      src: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=800&q=80',
+      alt: 'Football match',
+      category: 'Football'
     },
     {
-      src: 'https://images.unsplash.com/photo-1519311965067-36d3e5f33d39?auto=format&fit=crop&w=800&q=80',
-      alt: 'Community event',
-      category: 'Events'
+      src: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80',
+      alt: 'Handball game',
+      category: 'Handball'
     },
     {
-      src: 'https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&w=800&q=80',
-      alt: 'Team huddle',
-      category: 'Team'
+      src: 'https://images.unsplash.com/photo-1594470117722-de4b9a02ebed?auto=format&fit=crop&w=800&q=80',
+      alt: 'Flash event',
+      category: 'Flash events'
     },
     {
-      src: 'https://images.unsplash.com/photo-1533107862482-0e6974b06ec4?auto=format&fit=crop&w=800&q=80',
-      alt: 'Spectators at a game',
-      category: 'Events'
+      src: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+      alt: 'Chess championship',
+      category: 'Chess'
     },
     {
-      src: 'https://images.unsplash.com/photo-1566936440394-681046e0e75c?auto=format&fit=crop&w=800&q=80',
-      alt: 'Championship trophy',
-      category: 'Achievements'
+      src: 'https://images.unsplash.com/photo-1623796898624-d382e4fffce5?auto=format&fit=crop&w=800&q=80',
+      alt: 'Football tournament',
+      category: 'Football'
     }
   ];
   
-  const categories = ['All', ...new Set(images.map(img => img.category))];
+  const categories = ['All', 'Chess', 'Badminton', 'Cricket', 'Football', 'Handball', 'Flash events'];
   const [activeCategory, setActiveCategory] = useState('All');
   
   const filteredImages = activeCategory === 'All' 
@@ -64,37 +65,28 @@ const Gallery = () => {
             Capturing the moments of dedication, triumph, and teamwork that define Team Sportivo.
           </p>
           
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {categories.map((category, index) => (
-              <button 
-                key={index}
-                onClick={() => setActiveCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  activeCategory === category 
-                    ? 'bg-primary text-white' 
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+          <div className="flex justify-center mb-12">
+            <ToggleGroup type="single" value={activeCategory} onValueChange={(value) => value && setActiveCategory(value)}>
+              {categories.map((category) => (
+                <ToggleGroupItem key={category} value={category} variant="outline" className="px-4 py-2 rounded-full">
+                  {category}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredImages.map((image, index) => (
               <div 
                 key={index}
-                className="aspect-square overflow-hidden rounded-lg cursor-pointer hover-scale group relative"
+                className="aspect-square overflow-hidden rounded-lg cursor-pointer hover-scale relative"
                 onClick={() => setSelectedImage(image.src)}
               >
                 <img 
                   src={image.src} 
                   alt={image.alt}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-300"
                 />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span className="text-white font-medium">{image.alt}</span>
-                </div>
               </div>
             ))}
           </div>
