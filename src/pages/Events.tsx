@@ -1,9 +1,10 @@
-
 import React, { useEffect } from 'react';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import CustomButton from '@/components/ui/CustomButton';
 import SocialShare from '@/components/ui/SocialShare';
+import { auth } from '@/lib/firebase';
+import { toast } from 'sonner';
 
 const Events = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -122,6 +123,24 @@ const Events = () => {
     setSearchParams(searchParams);
   };
   
+  // Function to handle event registration with auth check
+  const handleEventClick = (eventId: string) => {
+    // Check if user is signed in
+    if (!auth.currentUser) {
+      toast.error("Please sign in to access event details", {
+        description: "Sign in is required to register for events",
+        action: {
+          label: "Sign In",
+          onClick: () => navigate('/signin')
+        }
+      });
+      return;
+    }
+    
+    // If signed in, navigate to event details
+    navigate(`/events/${eventId}`);
+  };
+  
   const filteredEvents = activeCategory === 'All' 
     ? events 
     : events.filter(event => event.category === activeCategory);
@@ -208,7 +227,7 @@ const Events = () => {
                     
                     <div className="flex items-center justify-between mt-auto pt-4 border-t">
                       <CustomButton 
-                        to={`/events/${event.id}`}
+                        onClick={() => handleEventClick(event.id)}
                         size="sm"
                       >
                         Event Details

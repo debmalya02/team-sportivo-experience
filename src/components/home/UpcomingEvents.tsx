@@ -1,11 +1,14 @@
 
 import React from 'react';
 import { Calendar, Clock, MapPin, ExternalLink } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CustomButton from '../ui/CustomButton';
 import SocialShare from '../ui/SocialShare';
+import { auth } from '@/lib/firebase';
+import { toast } from 'sonner';
 
 const UpcomingEvents = () => {
+  const navigate = useNavigate();
   const events = [
     {
       id: 'event1',
@@ -44,6 +47,24 @@ const UpcomingEvents = () => {
 
   const featuredEvent = events.find(event => event.featured);
   const regularEvents = events.filter(event => !event.featured);
+
+  // Function to handle event registration with auth check
+  const handleEventClick = (eventId: string) => {
+    // Check if user is signed in
+    if (!auth.currentUser) {
+      toast.error("Please sign in to access event details", {
+        description: "Sign in is required to register for events",
+        action: {
+          label: "Sign In",
+          onClick: () => navigate('/signin')
+        }
+      });
+      return;
+    }
+    
+    // If signed in, navigate to event details
+    navigate(`/events/${eventId}`);
+  };
 
   return (
     <section className="py-24 bg-white">
@@ -97,7 +118,7 @@ const UpcomingEvents = () => {
               
               <div className="flex flex-wrap items-center gap-4">
                 <CustomButton 
-                  to={`/events/${featuredEvent.id}`}
+                  onClick={() => handleEventClick(featuredEvent.id)}
                   size="lg"
                 >
                   Event Details
@@ -146,13 +167,13 @@ const UpcomingEvents = () => {
                 </div>
                 
                 <div className="flex items-center justify-between pt-4 border-t">
-                  <Link 
-                    to={`/events/${event.id}`}
+                  <button 
+                    onClick={() => handleEventClick(event.id)}
                     className="text-primary font-medium flex items-center gap-1 group/link"
                   >
                     Event Details
                     <ExternalLink size={16} className="transition-transform group-hover/link:translate-x-1" />
-                  </Link>
+                  </button>
                   
                   <SocialShare 
                     title={`Join us for ${event.title} at Team Sportivo`}

@@ -1,56 +1,42 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { fetchImagesFromFolder } from '@/utils/storageUtils';
+import { toast } from 'sonner';
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  
-  const images = [
-    {
-      src: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=800&q=80',
-      alt: 'Chess tournament',
-      category: 'Chess'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4e8?auto=format&fit=crop&w=800&q=80',
-      alt: 'Badminton match',
-      category: 'Badminton'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=800&q=80',
-      alt: 'Cricket tournament',
-      category: 'Cricket'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=800&q=80',
-      alt: 'Football match',
-      category: 'Football'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80',
-      alt: 'Handball game',
-      category: 'Handball'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1594470117722-de4b9a02ebed?auto=format&fit=crop&w=800&q=80',
-      alt: 'Flash event',
-      category: 'Flash events'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
-      alt: 'Chess championship',
-      category: 'Chess'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1623796898624-d382e4fffce5?auto=format&fit=crop&w=800&q=80',
-      alt: 'Football tournament',
-      category: 'Football'
-    }
-  ];
+  const [images, setImages] = useState<{src: string; alt: string; category: string}[]>([]);
+  const [loading, setLoading] = useState(true);
   
   const categories = ['All', 'Chess', 'Badminton', 'Cricket', 'Football', 'Handball', 'Flash events'];
   const [activeCategory, setActiveCategory] = useState('All');
+  
+  useEffect(() => {
+    const loadImages = async () => {
+      setLoading(true);
+      try {
+        // Fetch images from the gallery folder in Firebase Storage
+        const fetchedImages = await fetchImagesFromFolder('gallery');
+        
+        // Add default category if missing
+        const processedImages = fetchedImages.map(img => ({
+          ...img,
+          category: img.category || 'Other'
+        }));
+        
+        setImages(processedImages);
+      } catch (error) {
+        console.error("Failed to load gallery images:", error);
+        toast.error("Failed to load images. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadImages();
+  }, []);
   
   const filteredImages = activeCategory === 'All' 
     ? images 
@@ -75,21 +61,33 @@ const Gallery = () => {
             </ToggleGroup>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredImages.map((image, index) => (
-              <div 
-                key={index}
-                className="aspect-square overflow-hidden rounded-lg cursor-pointer hover-scale relative"
-                onClick={() => setSelectedImage(image.src)}
-              >
-                <img 
-                  src={image.src} 
-                  alt={image.alt}
-                  className="w-full h-full object-cover transition-transform duration-300"
-                />
-              </div>
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {filteredImages.map((image, index) => (
+                <div 
+                  key={index}
+                  className="aspect-square overflow-hidden rounded-lg cursor-pointer relative group"
+                  onClick={() => setSelectedImage(image.src)}
+                >
+                  <img 
+                    src={image.src} 
+                    alt={image.alt}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {filteredImages.length === 0 && !loading && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No images found for this category.</p>
+            </div>
+          )}
         </div>
       </section>
       
